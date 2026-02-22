@@ -9,15 +9,18 @@ export class FilmsService {
   ) {}
 
   async findAll(): Promise<Film[]> {
-    return this.filmRepository.findAll();
+    const films = this.filmRepository.findAll();
+    return films as unknown as Film[];
   }
 
-  async findOne(id: string): Promise<Film> {
-    return this.filmRepository.findOne(id);
+  async findOne(id: string): Promise<Film | null> {
+    const film = await this.filmRepository.findOne(id);
+    return film as unknown as Film | null;
   }
 
   async getSchedule(id: string): Promise<ScheduleItem[] | null> {
-    return this.filmRepository.getSchedule(id);
+    const schedule = this.filmRepository.getSchedule(id);
+    return schedule as unknown as ScheduleItem[] | null;
   }
 
   async updateTakenSeats(
