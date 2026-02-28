@@ -5,7 +5,9 @@ import { Film, ScheduleItem } from '../films/schemas/film.schema';
 import { FilmRepository } from './films-repository.interface';
 
 @Injectable()
-export class MongoFilmsRepository implements FilmRepository {
+export class MongoFilmsRepository
+  implements FilmRepository<Film, ScheduleItem>
+{
   constructor(@InjectModel(Film.name) private filmModel: Model<Film>) {}
 
   async findAll(): Promise<Film[]> {
