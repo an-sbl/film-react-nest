@@ -9,11 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api/afisha', {
     exclude: ['content/afisha/(.*)'],
   });
-  app.enableCors({
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Accept'],
-  });
+  app.enableCors();
   app.useLogger(new TskvLogger());
   await app.listen(3000);
 }

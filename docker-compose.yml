@@ -10,6 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - films_network
     healthcheck:
@@ -38,12 +39,11 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: backend
       dockerfile: Dockerfile
     image: ghcr.io/an-sbl/film-react-nest-backend:latest
     container_name: films_backend
     environment:
-      - NODE_ENV=production
       - DEBUG=*
       - DATABASE_DRIVER=postgres
       - DATABASE_HOST=postgres
@@ -60,33 +60,34 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-  frontend-builder:
+  frontend:
+    image: 'ghcr.io/an-sbl/film-react-nest-frontend:latest'
     build:
-      context: ./frontend
+      context: frontend
       dockerfile: Dockerfile
-    container_name: films_frontend_builder
+    container_name: films_frontend
     environment:
+      - VITE_BASE_URL=/
       - VITE_API_URL=/api/afisha
       - VITE_CDN_URL=/content/afisha
     volumes:
       - frontend_dist:/app/dist
-    command:  sh -c "npm run build && cp -r /app/dist/* /app/dist/ || true"
 
   nginx:
     build:
-      context: ./nginx
+      context: nginx
       dockerfile: Dockerfile
     image: ghcr.io/an-sbl/film-react-nest-nginx:latest
     container_name: films_nginx
     ports:
       - "80:80"
     volumes:
-      - frontend_dist:/usr/share/nginx/html
+      - frontend_dist:/var/www
     networks:
       - films_network
     depends_on:
       - backend
-      - frontend-builder
+      - frontend
     restart: unless-stopped
 
 networks:
