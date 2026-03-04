@@ -31,6 +31,13 @@ MongoDB должна быть установлена и запущена.
 
 Для проверки отправьте тестовый запрос с помощью Postman или `curl`.
 
+## Деплой
+
+Проект развернут и доступен по адресам:
+
+- **Фронтенд**: [http://films.ansbl.nomorepartiessite.ru](http://films.ansbl.nomorepartiessite.ru)
+- **API**: [http://films.ansbl.nomorepartiessite.ru/api/afisha/films](http://films.ansbl.nomorepartiessite.ru/api/afisha/films)
+
 
 
 
