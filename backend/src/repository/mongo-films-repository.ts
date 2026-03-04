@@ -2,23 +2,27 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Film, ScheduleItem } from '../films/schemas/film.schema';
-import { FilmRepository } from './films-repository.interface';
+import {
+  FilmRepository,
+  FilmEntityInterface,
+  ScheduleEntityInterface,
+} from './films-repository.interface';
 
 @Injectable()
-export class MongoFilmsRepository
-  implements FilmRepository<Film, ScheduleItem>
-{
+export class MongoFilmsRepository implements FilmRepository {
   constructor(@InjectModel(Film.name) private filmModel: Model<Film>) {}
 
-  async findAll(): Promise<Film[]> {
-    return this.filmModel.find().exec();
+  async findAll(): Promise<FilmEntityInterface[]> {
+    const films = await this.filmModel.find().exec();
+    return films.map((film) => this.mapToFilmInterface(film));
   }
 
-  async findOne(id: string): Promise<Film | null> {
-    return this.filmModel.findOne({ id: id }).exec();
+  async findOne(id: string): Promise<FilmEntityInterface | null> {
+    const film = await this.filmModel.findOne({ id: id }).exec();
+    return film ? this.mapToFilmInterface(film) : null;
   }
 
-  async getSchedule(id: string): Promise<ScheduleItem[] | null> {
+  async getSchedule(id: string): Promise<ScheduleEntityInterface[] | null> {
     const film = await this.findOne(id);
     return film?.schedule || null;
   }
@@ -44,5 +48,37 @@ export class MongoFilmsRepository
         { $set: { 'schedule.$.taken': updatedTaken } },
       )
       .exec();
+  }
+
+  private mapToFilmInterface(film: Film): FilmEntityInterface {
+    return {
+      id: film.id,
+      rating: film.rating,
+      director: film.director,
+      tags: film.tags,
+      image: film.image,
+      cover: film.cover,
+      title: film.title,
+      about: film.about,
+      description: film.description,
+      schedule: film.schedule
+        ? film.schedule.map((s) => this.mapToScheduleInterface(s))
+        : [],
+    };
+  }
+
+  private mapToScheduleInterface(
+    schedule: ScheduleItem,
+  ): ScheduleEntityInterface {
+    return {
+      id: schedule.id,
+      daytime: schedule.daytime,
+      hall: schedule.hall,
+      rows: schedule.rows,
+      seats: schedule.seats,
+      price: schedule.price,
+      taken: schedule.taken,
+      filmId: undefined,
+    };
   }
 }

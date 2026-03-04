@@ -1,25 +1,21 @@
-export class TakenSeatDTO {
-  row: number;
-  seat: number;
-}
-
-export class ScheduleDTO {
+export class ScheduleItemResponseDto {
+  id: string;
   daytime: string;
-  hall: number;
+  hall: string;
   rows: number;
   seats: number;
   price: number;
-  taken: TakenSeatDTO[];
+  taken: string[];
 }
 
-export class FilmDto {
+export class FilmItemResponseDto {
+  id: string;
   rating: number;
   director: string;
   tags: string[];
-  image: string;
-  cover: string;
   title: string;
   about: string;
   description: string;
-  schedule: ScheduleDTO[];
+  image: string;
+  cover: string;
 }

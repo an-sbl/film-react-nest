@@ -1,4 +1,4 @@
-export interface FilmEntity {
+export interface FilmEntityInterface {
   id: string;
   rating: number;
   director: string;
@@ -8,10 +8,10 @@ export interface FilmEntity {
   title: string;
   about: string;
   description: string;
-  schedule: ScheduleItemEntity[];
+  schedule: ScheduleEntityInterface[];
 }
 
-export interface ScheduleItemEntity {
+export interface ScheduleEntityInterface {
   id: string;
   daytime: string;
   hall: number;
@@ -22,10 +22,10 @@ export interface ScheduleItemEntity {
   filmId?: string;
 }
 
-export interface FilmRepository<T = FilmEntity, S = ScheduleItemEntity> {
-  findAll(): Promise<T[]>;
-  findOne(id: string): Promise<T | null>;
-  getSchedule(id: string): Promise<S[] | null>;
+export interface FilmRepository {
+  findAll(): Promise<FilmEntityInterface[]>;
+  findOne(id: string): Promise<FilmEntityInterface | null>;
+  getSchedule(id: string): Promise<ScheduleEntityInterface[] | null>;
   updateTakenSeats(
     filmId: string,
     sessionId: string,

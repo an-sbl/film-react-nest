@@ -1,6 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Film, ScheduleItem } from './schemas/film.schema';
-import { FilmRepository } from '../repository/films-repository.interface';
+import {
+  FilmRepository,
+  FilmEntityInterface as Film,
+  ScheduleEntityInterface as Schedule,
+} from '../repository/films-repository.interface';
 
 @Injectable()
 export class FilmsService {
@@ -9,18 +12,15 @@ export class FilmsService {
   ) {}
 
   async findAll(): Promise<Film[]> {
-    const films = this.filmRepository.findAll();
-    return films as unknown as Film[];
+    return this.filmRepository.findAll();
   }
 
   async findOne(id: string): Promise<Film | null> {
-    const film = await this.filmRepository.findOne(id);
-    return film as unknown as Film | null;
+    return this.filmRepository.findOne(id);
   }
 
-  async getSchedule(id: string): Promise<ScheduleItem[] | null> {
-    const schedule = this.filmRepository.getSchedule(id);
-    return schedule as unknown as ScheduleItem[] | null;
+  async getSchedule(id: string): Promise<Schedule[] | null> {
+    return this.filmRepository.getSchedule(id);
   }
 
   async updateTakenSeats(

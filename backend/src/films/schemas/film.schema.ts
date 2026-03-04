@@ -57,5 +57,4 @@ export class Film {
   schedule: ScheduleItem[];
 }
 
-//export type FilmDocument = Film & Document;
 export const FilmSchema = SchemaFactory.createForClass(Film);
